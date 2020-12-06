@@ -1,0 +1,223 @@
+Node ptr1 = poly1;
+		Node ptr2 = poly2;
+		Node added = null;
+		Node addptr = added;
+		if(ptr1.term.degree == ptr2.term.degree) {
+			added = new Node(ptr1.term.coeff+ptr2.term.coeff, ptr1.term.degree, null);
+			addptr = added;
+			ptr1 = ptr1.next;
+			ptr2 = ptr2.next;
+		}else if(ptr1.term.degree > ptr2.term.degree) {
+			Node c;
+			for(c = ptr2.next; c != null; c = c.next) {
+				if(c.term.degree < ptr1.term.degree) {
+					if(added == null) {
+						added = new Node(ptr2.term.coeff, ptr2.term.degree, null);
+						added.next = new Node(c.term.coeff, c.term.degree, null);
+						addptr = added;
+						addptr = addptr.next;
+					}else {
+						addptr.next = new Node(c.term.coeff, c.term.degree, null);
+						addptr = addptr.next;
+					}
+				}
+				else if(c.term.degree == ptr1.term.degree) {
+					if(added == null) {
+						added = new Node(ptr2.term.coeff, ptr2.term.degree, new Node(c.term.coeff+ptr1.term.coeff, c.term.degree, null));
+						addptr = added.next;
+						ptr2 = c.next;
+						ptr1 = ptr1.next;
+						break;
+					}else {
+					addptr.next = new Node(c.term.coeff+ptr1.term.coeff, c.term.degree, null);
+					addptr = addptr.next;
+					ptr2 = c.next;
+					ptr1 = ptr1.next;
+					break;
+					}
+				}else if(c.term.degree > ptr1.term.degree) {
+					if(added == null) {
+						added = new Node(ptr2.term.coeff, ptr2.term.degree, new Node(ptr1.term.coeff, ptr1.term.degree, new Node(c.term.coeff, c.term.degree, null)));
+						addptr = added.next;
+						addptr = addptr.next;
+						ptr1 = ptr1.next;
+						ptr2 = c.next;
+						break;
+					}else {
+						addptr.next = new Node(ptr1.term.coeff, ptr1.term.degree, new Node(c.term.coeff, c.term.degree, null));
+						addptr = addptr.next;
+						ptr1 = ptr1.next;
+						ptr2 = c.next;
+						break;
+					}
+				}
+			}
+			if(c == null) {
+				addptr.next = new Node(ptr1.term.coeff, ptr1.term.degree, null);
+				addptr = addptr.next;
+				ptr1 = ptr1.next;
+				ptr2 = c;
+			}
+		}else{
+			Node c;
+			for(c = ptr1.next; c!= null; c = c.next) {
+				if(c.term.degree < ptr2.term.degree) {
+					if(added == null) {
+						added = new Node(ptr1.term.coeff, ptr1.term.degree, null);
+						added.next = new Node(c.term.coeff, c.term.degree, null);
+						addptr = added;
+						addptr = addptr.next;
+					}else {
+						addptr.next = new Node(c.term.coeff, c.term.degree, null);
+						addptr = addptr.next;
+					}
+				}
+				else if(c.term.degree == ptr2.term.degree) {
+					if(added == null) {
+						added = new Node(ptr1.term.coeff, ptr1.term.degree, new Node(ptr2.term.coeff+c.term.coeff, c.term.degree, null));
+						addptr = added.next;
+						ptr1 = c.next;
+						ptr2 = ptr2.next;
+						break;
+					}else {
+					addptr.next = new Node(ptr2.term.coeff+c.term.coeff, c.term.degree, null);
+					addptr = addptr.next;
+					ptr1 = c.next;
+					ptr2 = ptr2.next;
+					break;
+					}
+				}else if(c.term.degree > ptr2.term.degree) {
+					if(added == null) {
+						added = new Node(ptr1.term.coeff, ptr1.term.degree, new Node(ptr2.term.coeff, ptr2.term.degree, new Node(c.term.coeff, c.term.degree, null)));
+						addptr = added.next;
+						addptr = addptr.next;
+						ptr2 = ptr2.next;
+						ptr1 = c.next;
+						break;
+				}else {
+					addptr.next = new Node(ptr2.term.coeff, ptr2.term.degree, new Node(c.term.coeff, c.term.degree, null));
+					addptr = addptr.next;
+					ptr2 = ptr2.next;
+					ptr1 = c.next;
+					break;
+				}
+			}
+		}
+			if(c == null) {
+				addptr.next = new Node(ptr2.term.coeff, ptr2.term.degree, null);
+				addptr = addptr.next;
+				ptr2 = ptr2.next;
+				ptr1 = c;
+			}
+		}
+		boolean track = true;
+		while(track) {
+			if(ptr1 == null && ptr2 == null) {
+				break;
+			}
+			if(ptr1 == null) {
+				addptr.next = ptr2;
+				break;
+			}
+			if(ptr2 == null) {
+				addptr.next = ptr1;
+				break;
+			}
+			if(ptr1.term.degree == ptr2.term.degree) {
+				addptr.next = new Node(ptr1.term.coeff+ptr2.term.coeff, ptr1.term.degree, null);
+			}else if(ptr1.term.degree > ptr2.term.degree) {
+				Node c;
+				for(c = ptr2.next; c != null; c = c.next) {
+					if(c.term.degree < ptr1.term.degree) {
+						if(ptr2.next == c) {
+							addptr.next = new Node(ptr2.term.coeff, ptr2.term.degree, null);
+							addptr = addptr.next;
+						}
+						addptr.next = new Node(c.term.coeff, c.term.degree, null);
+						addptr = addptr.next;
+					}
+					else if(c.term.degree == ptr1.term.degree) {
+						addptr.next = new Node(ptr2.term.coeff, ptr2.term.degree, new Node(c.term.coeff+ptr1.term.coeff, c.term.degree, null));
+						addptr = addptr.next;
+						ptr2 = c;
+						break;
+					}else if(c.term.degree > ptr1.term.degree) {
+						addptr.next = new Node(ptr1.term.coeff, ptr1.term.degree, new Node(c.term.coeff, c.term.degree, null));
+						addptr = addptr.next;
+						if(ptr2.next != c) {
+							ptr2 = c;
+						}
+						break;
+					}
+				}
+				if(c == null) {
+					addptr.next = new Node(ptr2.term.coeff, ptr2.term.degree, new Node(ptr1.term.coeff, ptr1.term.degree, null));
+					addptr = addptr.next;
+				}
+			}else {
+				Node c;
+				for(c = ptr1.next; c != null; c = c.next) {
+					if(c.term.degree < ptr2.term.degree) {
+						if(ptr1.next == c) {
+							addptr.next = new Node(ptr1.term.coeff, ptr1.term.degree, null);
+							addptr = addptr.next;
+						}
+						addptr.next = new Node(c.term.coeff, c.term.degree, null);
+						addptr = addptr.next;
+					}
+					else if(c.term.degree == ptr2.term.degree) {
+						addptr.next = new Node(ptr1.term.coeff, ptr1.term.degree, new Node(c.term.coeff+ptr2.term.coeff, c.term.degree, null));
+						addptr = addptr.next;
+						ptr1 = c;
+						break;
+					}else if(c.term.degree > ptr2.term.degree) {
+						addptr.next = new Node(ptr2.term.coeff, ptr2.term.degree, new Node(c.term.coeff, c.term.degree, null));
+						addptr = addptr.next;
+						if(ptr1.next != c) {
+							ptr1 = c;
+						}
+						break;
+					}
+				}
+				if(c == null) {
+					addptr.next = new Node(ptr1.term.coeff, ptr1.term.degree, new Node(ptr2.term.coeff, ptr2.term.degree, null));
+					addptr = addptr.next;
+				}
+			}
+			
+			ptr1 = ptr1.next;
+			ptr2 = ptr2.next;
+			addptr = addptr.next;
+		}
+		//sorting the linked list just in case a few terms are mixed up
+		Node sortprev = added;
+		Node sortprev2 = null;
+		Node sortptr = added.next;
+		while(sortptr != null) {
+			if(sortprev.term.degree > sortptr.term.degree) {
+				sortprev2.next = sortptr;
+				sortprev.next = sortptr.next;
+				sortptr.next = sortprev;
+			}
+				sortprev2 = sortprev;
+				sortprev = sortptr;
+				sortptr = sortptr.next;
+		}
+		
+		//deleting occurences of 0 coeffcients
+		Node prev = null;
+		Node delptr = added;
+		while(delptr != null) {
+			if(delptr.term.coeff == 0 && prev == null) {
+				added = added.next;
+				prev = null;
+				delptr = delptr.next;
+			}else if(delptr.term.coeff == 0) {
+				prev.next = delptr.next;
+				prev = delptr;
+				delptr = delptr.next;
+			}else {
+			prev = delptr;
+			delptr = delptr.next;
+			}
+		}
